@@ -7,13 +7,13 @@ https://docs.python.org/3/library/turtle.html
 
 ## How to use it
 
-To use the `wandering_turtle` example, follow these steps:
+To use the `zigzag_turtle` example, follow these steps:
 
 1. **Install Python**  
     Ensure you have Python installed on your system. You can download it from [python.org](https://www.python.org/).
 
 2. **Run the Script**  
-    Execute the `wandering_turtle.py` script using the following command:
+    Execute the `zigzag_turtle.py` script using the following command:
     ```bash
     python wandering_turtle.py
     ```

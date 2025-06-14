@@ -6,14 +6,10 @@ my_turtle = Turtle()
 screen = Screen()
 
 # Setup the Turtle Configuration
-my_turtle.shape("turtle")
+my_turtle.shape("classic")
 my_turtle.speed("fastest")
-
-def move_top_left():
-    """Move the turtle to the top left corner of the screen."""
-    my_turtle.penup()
-    my_turtle.goto(-screen.window_width() // 2 + 20, screen.window_height() // 2 - 20)
-    my_turtle.pendown()
+my_turtle.pensize(10) # Set the pen size
+my_turtle.hideturtle() # Hide the turtle for a cleaner look
 
 def generate_random_color() -> str:
     """Generate a random hex color."""
@@ -27,35 +23,41 @@ def turtle_color_change():
     my_turtle.pencolor(generate_random_color())
     my_turtle.fillcolor(generate_random_color())
 
-def turtle_dot_line(steps: int):
-    """Draw a line of dots with random colors."""
-    for _ in range (steps):
-        turtle_color_change()
-        my_turtle.dot()
-        my_turtle.forward(30)
+def is_out_of_screen(degree):
+    """Check if the turtle is about to move out of the screen."""
+    x, y = my_turtle.position() # Get current position
 
-def wandering_turtle(width: int, height: int):
-    """Make the turtle wander."""
+    # We need to get half due to the turtle's position being at the center of the shape
+    screen_width = screen.window_width() // 2 # Half the width of the screen
+    screen_height = screen.window_height() // 2 # Half the height of the screen
 
-    move_top_left() # Start at the top left corner
-    my_turtle.penup() # Lift the pen to avoid drawing while moving
+    next_x, next_y = my_turtle.xcor(), my_turtle.ycor() # Get current coordinates
+    if degree == 0:  # Facing right
+        next_x += 50
+    elif degree == 90:  # Facing up
+        next_y += 50 
+    elif degree == 180:  # Facing left
+        next_x -= 50
+    elif degree == 270:  # Facing down
+        next_y -= 50
 
-    for _ in range (height):
+    return not (-screen_width < next_x < screen_width and -screen_height < next_y < screen_height)
 
-        turtle_dot_line(width)
+def random_walk():
+    """Make the turtle perform a random walk."""
+    
+    while True: 
+        degree = random.choice([0,90,180,270]) # Randomly choose a direction
+        turtle_color_change() # Change the turtle's color
+        
+        if is_out_of_screen(degree): # Check if the turtle is going out of the screen
+            print(f"Current degree is {degree}. You are going out of screen. move back.")
+            degree = (degree + 180) % 360 # Reverse direction if out of screen
+            print(f"Changed degree to {degree}")
 
-        if _%2 == 0:
-            my_turtle.dot()
-            my_turtle.seth(270)  # Set heading to 270 degrees (down)
-            my_turtle.forward(30) # Move down 30 units
-            my_turtle.seth(180) # Set heading to 180 degrees (left)
-        else:
-            my_turtle.dot()
-            my_turtle.seth(270) # Set heading to 270 degrees (down)
-            my_turtle.forward(30) # Move down 30 units
-            my_turtle.seth(0) # Set heading to 0 degrees (right)
+        my_turtle.seth(degree) # Set the turtle's heading
+        my_turtle.forward(20) # Move the turtle forward
 
-wandering_turtle(25, 25)
+random_walk()
 
-# Close the screen on click
 screen.exitonclick()
